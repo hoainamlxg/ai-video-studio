@@ -1,0 +1,20 @@
+
+{
+  "name": "AI Video Studio",
+  "short_name": "AI Studio",
+  "description": "Trợ lý sáng tạo video và quảng cáo",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#17130f",
+  "theme_color": "#17130f",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
