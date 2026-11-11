@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17130f">
+<title>AI Video Studio - iPhone Edition</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#17130f;color:#fff;font-family:Arial,sans-serif}
+header{padding:24px 18px;background:linear-gradient(135deg,#382719,#17130f)}
+h1{color:#ffc45c;font-size:25px;margin:0 0 8px}
+header p{color:#d8c6ad;margin:0}
+nav{display:flex;overflow:auto;gap:8px;padding:12px;background:#211b15;position:sticky;top:0;z-index:2}
+nav button{white-space:nowrap;background:#382d22;color:#fff;border:0;border-radius:10px;padding:11px}
+nav button.active{background:#e6a83f;color:#21160a;font-weight:bold}
+main{padding:16px;max-width:760px;margin:auto}
+.panel{display:none}.panel.active{display:block}
+h2{color:#ffc45c;font-size:21px}
+label{display:block;margin:14px 0 6px;color:#e9d6b9}
+input,textarea,select{width:100%;padding:13px;border:1px solid #594632;border-radius:10px;background:#251f19;color:white;font-size:16px}
+textarea{min-height:90px;resize:vertical}
+.action{background:#e8a83e;color:#21160a;border:0;border-radius:10px;padding:14px;font-weight:bold;width:100%;margin-top:16px;font-size:16px}
+.secondary{background:#493b2b;color:white}
+.result{white-space:pre-wrap;background:#241e17;border:1px solid #594632;padding:14px;border-radius:10px;margin-top:15px;line-height:1.6;min-height:50px}
+small{color:#bca98e}
+.item{padding:12px;background:#241e17;border-radius:10px;margin:10px 0}
+footer{text-align:center;color:#a9977c;padding:25px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<h1>🎬 AI VIDEO STUDIO</h1>
+<p>Trợ lý sáng tạo kịch bản – Google Flow – quảng cáo bán hàng</p>
+</header>
+<nav>
+<button class="active" onclick="tab('script',this)">🎭 Kịch bản</button>
+<button onclick="tab('flow',this)">🎥 Prompt Flow</button>
+<button onclick="tab('sale',this)">🛍️ Bán hàng</button>
+<button onclick="tab('saved',this)">📁 Đã lưu</button>
+</nav>
+<main>
+<section id="script" class="panel active">
+<h2>🎭 Tạo kịch bản video</h2>
+<label>Chủ đề video</label>
+<input id="topic" placeholder="Ví dụ: Nhân viên thiếu 5 ngàn">
+<label>Thời lượng mỗi phân đoạn</label>
+<select id="duration"><option>8 giây</option><option>10 giây</option><option>15 giây</option></select>
+<label>Số phân đoạn</label>
+<select id="scenes"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
+<label>Nhân vật</label>
+<input id="cast" value="Bà chủ, người chồng, cô nhân viên">
+<label>Phong cách</label>
+<select id="style"><option>Hài hước đời thường miền Tây</option><option>Cảm động</option><option>Kịch tính</option><option>Quảng cáo bán hàng</option></select>
+<button class="action" onclick="makeScript()">✨ TẠO KỊCH BẢN</button>
+<div id="scriptResult" class="result">Kịch bản của bạn sẽ xuất hiện ở đây.</div>
+<button class="action secondary" onclick="copyResult('scriptResult')">Sao chép kịch bản</button>
+<button class="action secondary" onclick="saveResult('Kịch bản','scriptResult')">Lưu dự án</button>
+</section>
+
+<section id="flow" class="panel">
+<h2>🎥 Viết câu lệnh Google Flow</h2>
+<label>Mô tả cảnh quay</label>
+<textarea id="scene" placeholder="Mô tả diễn biến trong video..."></textarea>
+<label>Thời lượng</label>
+<select id="flowDuration"><option>8 giây</option><option>10 giây</option><option>15 giây</option></select>
+<label>Giọng nói</label>
+<select id="voice"><option>Giọng miền Tây Nam Bộ tự nhiên</option><option>Giọng nữ miền Nam</option><option>Giọng nam miền Nam</option><option>Giọng miền Bắc</option></select>
+<label>Yêu cầu giữ nguyên hình ảnh</label>
+<select id="lock"><option>Khóa chặt ảnh gốc, không thay đổi bất kỳ chi tiết nào</option><option>Giữ nguyên nhân vật và bối cảnh</option><option>Được phép sáng tạo thêm chuyển động</option></select>
+<label>Âm thanh</label>
+<select id="sound"><option>Nhạc nền, hiệu ứng âm thanh và tiếng cười đúng lúc</option><option>Chỉ âm thanh môi trường tự nhiên</option><option>Không nhạc nền</option></select>
+<button class="action" onclick="makeFlow()">✨ TẠO PROMPT FLOW</button>
+<div id="flowResult" class="result">Prompt Flow sẽ xuất hiện ở đây.</div>
+<button class="action secondary" onclick="copyResult('flowResult')">Sao chép Prompt</button>
+<button class="action secondary" onclick="saveResult('Prompt Flow','flowResult')">Lưu dự án</button>
+</section>
+
+<section id="sale" class="panel">
+<h2>🛍️ Nội dung quảng cáo bán hàng</h2>
+<label>Tên món / sản phẩm</label>
+<input id="product" value="Cơm Cháy Quẹt Giòn">
+<label>Điểm hấp dẫn</label>
+<textarea id="benefit" placeholder="Ví dụ: Cơm cháy giòn, kho quẹt nóng, có chay có mặn..."></textarea>
+<label>Giá bán</label>
+<input id="price" placeholder="Ví dụ: Chỉ từ 35K">
+<label>Phong cách bài viết</label>
+<select id="adstyle"><option>Gần gũi, vui vẻ kiểu miền Tây</option><option>Ngắn gọn, kích thích đặt hàng</option><option>Hài hước, bắt trend</option></select>
+<button class="action" onclick="makeAd()">✨ TẠO BÀI QUẢNG CÁO</button>
+<div id="saleResult" class="result">Bài quảng cáo sẽ xuất hiện ở đây.</div>
+<button class="action secondary" onclick="copyResult('saleResult')">Sao chép bài viết</button>
+<button class="action secondary" onclick="saveResult('Quảng cáo','saleResult')">Lưu dự án</button>
+</section>
+
+<section id="saved" class="panel">
+<h2>📁 Dự án đã lưu</h2>
+<div id="savedList"></div>
+<button class="action secondary" onclick="exportData()">Tải bản sao lưu JSON</button>
+<label>Khôi phục dự án từ JSON</label>
+<input type="file" id="importFile" accept=".json">
+<button class="action secondary" onclick="importData()">Khôi phục dữ liệu</button>
+</section>
+</main>
+<footer>AI VIDEO STUDIO • iPhone Edition • Phiên bản miễn phí</footer>
+<script>
+function tab(id,btn){
+document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+btn.classList.add('active');
+if(id==='saved')renderSaved();
+}
+function makeScript(){
+let topic=document.getElementById('topic').value||'Một tình huống hài hước trong cuộc sống';
+let d=document.getElementById('duration').value;
+let n=Number(document.getElementById('scenes').value);
+let cast=document.getElementById('cast').value;
+let style=document.getElementById('style').value;
+let out='KỊCH BẢN: '+topic+'\nNhân vật: '+cast+'\nPhong cách: '+style+'\n\n';
+for(let i=1;i<=n;i++){
+out+='PHÂN ĐOẠN '+i+' – '+d+'\n';
+out+='Bối cảnh: Không gian đời thường, diễn biến tự nhiên.\n';
+out+='Hình ảnh: Nhân vật tương tác, biểu cảm rõ ràng, hành động phù hợp câu chuyện.\n';
+out+='Thoại: Nhân vật nói chuyện tự nhiên, đúng vai, giọng miền Tây gần gũi.\n';
+out+='Âm thanh: Nhạc nền phù hợp, tiếng động theo hành động, tiếng cười tại điểm gây hài nếu thích hợp.\n\n';
+}
+out+='KẾT: Tạo điểm nhấn dễ nhớ, kết thúc tự nhiên.';
+document.getElementById('scriptResult').textContent=out;
+}
+function makeFlow(){
+let out='YÊU CẦU TẠO VIDEO GOOGLE FLOW\n';
+out+='Thời lượng: '+document.getElementById('flowDuration').value+'\n';
+out+='MÔ TẢ CẢNH: '+document.getElementById('scene').value+'\n';
+out+='GIỌNG NÓI: '+document.getElementById('voice').value+'\n';
+out+='BẢO TOÀN HÌNH ẢNH: '+document.getElementById('lock').value+'\n';
+out+='ÂM THANH: '+document.getElementById('sound').value+'\n\n';
+out+='Chuyển động mượt mà, biểu cảm tự nhiên, đồng bộ khẩu hình với lời thoại. Không tự ý thêm nhân vật, không làm biến dạng vật thể. Chia diễn biến rõ theo mốc thời gian. Không phụ đề, không chữ chèn trên hình.';
+document.getElementById('flowResult').textContent=out;
+}
+function makeAd(){
+let p=document.getElementById('product').value;
+let b=document.getElementById('benefit').value;
+let price=document.getElementById('price').value;
+let tone=document.getElementById('adstyle').value;
+let out='🔥 '+p.toUpperCase()+' 🔥\n\n'+b+'\n\n';
+out+=price?price+'\n\n':'';
+out+='Giọng viết: '+tone+'\n';
+out+='📍 CS5 - 21 Đường số 15, giai đoạn 2, Tây Sông Hậu, P. Long Xuyên, An Giang\n';
+out+='📞 0834 772 901\n';
+out+='🛵 Có trên Vill Food, ShopeeFood, GrabFood, Bship Food.\n';
+out+='Cơm Cháy Quẹt Giòn – Giòn đúng vị, đậm đúng gu!';
+document.getElementById('saleResult').textContent=out;
+}
+function copyResult(id){
+let t=document.getElementById(id).textContent;
+if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>alert('Đã sao chép!')).catch(()=>alert('Hãy chọn và sao chép nội dung thủ công.'));}
+else alert('Hãy chọn và sao chép nội dung thủ công.');
+}
+function getSaved(){try{return JSON.parse(localStorage.getItem('avstudio')||'[]')}catch(e){return []}}
+function saveResult(name,id){
+let a=getSaved();
+a.unshift({name:name,date:new Date().toLocaleString('vi-VN'),content:document.getElementById(id).textContent});
+localStorage.setItem('avstudio',JSON.stringify(a));
+alert('Đã lưu dự án trên thiết bị!');
+}
+function renderSaved(){
+let a=getSaved();
+document.getElementById('savedList').innerHTML=a.length?a.map((x,i)=>'<div class="item"><b>'+x.name+'</b><br><small>'+x.date+'</small><p></p><button onclick="showSaved('+i+')">Xem nội dung</button> <button onclick="deleteSaved('+i+')">Xóa</button></div>').join(''):'Chưa có dự án nào được lưu.';
+}
+function showSaved(i){let a=getSaved();alert(a[i].content)}
+function deleteSaved(i){let a=getSaved();a.splice(i,1);localStorage.setItem('avstudio',JSON.stringify(a));renderSaved()}
+function exportData(){
+let blob=new Blob([JSON.stringify(getSaved(),null,2)],{type:'application/json'});
+let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='AI-Video-Studio-backup.json';a.click();URL.revokeObjectURL(a.href);
+}
+function importData(){
+let f=document.getElementById('importFile').files[0];if(!f)return alert('Vui lòng chọn file JSON');
+let r=new FileReader();r.onload=()=>{try{let a=JSON.parse(r.result);if(!Array.isArray(a))throw Error();localStorage.setItem('avstudio',JSON.stringify(a));renderSaved();alert('Đã khôi phục!')}catch(e){alert('File không hợp lệ')}};r.readAsText(f);
+}
+</script>
+</body>
+</html>
